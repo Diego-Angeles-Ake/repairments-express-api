@@ -9,9 +9,24 @@ const {
   updateRepair,
   removeRepair,
 } = require('../controllers/repairs.controller');
+// Middleware
+const { repairExists } = require('../middlewares/repairs.middlwares');
+const {
+  createUserValidations,
+  checkValidations,
+  createRepairValidations,
+} = require('../middlewares/validations.middlewares');
 
-router.route('/').get(getAllRepairs).post(createRepair);
-router.route('/:id').get(getRepair).patch(updateRepair).delete(removeRepair);
+router
+  .route('/')
+  .get(getAllRepairs)
+  .post(createRepairValidations, checkValidations, createRepair);
+router
+  .use('/:id', repairExists)
+  .route('/:id')
+  .get(getRepair)
+  .patch(updateRepair)
+  .delete(removeRepair);
 
 module.exports = {
   repairsRouter: router,
