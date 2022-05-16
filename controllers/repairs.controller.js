@@ -27,6 +27,7 @@ const getRepair = catchAsync(async (req, res, next) => {
 
 const updateRepair = catchAsync(async (req, res, next) => {
   const { ...columns } = req.body;
+  // Allow employee to change status back to pending in case of a mistake
   if (columns['status'] !== 'completed' && columns['status'] !== 'pending') {
     return next(
       new AppError('Only allow to update status to completed or pending', 400)

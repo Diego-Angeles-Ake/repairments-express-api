@@ -8,22 +8,32 @@ const {
   createUser,
   updateUser,
   removeUser,
+  login,
 } = require('../controllers/users.controller');
+
 // Middleware
-const { userExists } = require('../middlewares/users.middlewares');
+const {
+  userExists,
+  protectToken,
+  ownerAuth,
+} = require('../middlewares/users.middlewares');
 const {
   createUserValidations,
   checkValidations,
 } = require('../middlewares/validations.middlewares');
 
+// Public routes
+router.post('/', createUserValidations, checkValidations, createUser);
+router.post('/login', login);
+router.get('/:id', userExists, getUser);
+
+// Protected routes
+router.use(protectToken);
+router.get('/', getAllUsers);
+
 router
-  .route('/')
-  .get(getAllUsers)
-  .post(createUserValidations, checkValidations, createUser);
-router
-  .use('/:id', userExists)
+  .use('/:id', userExists, ownerAuth)
   .route('/:id')
-  .get(getUser)
   .patch(updateUser)
   .delete(removeUser);
 

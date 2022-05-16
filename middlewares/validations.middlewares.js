@@ -1,19 +1,19 @@
 const { body, validationResult } = require('express-validator');
 
 const createUserValidations = [
-  body('name').notEmpty().withMessage('Name can not be empty'),
-  body('email')
-    .notEmpty()
-    .withMessage('Email can not be empty')
-    .isEmail()
-    .withMessage('Must be a valid email'),
+  body('name').notEmpty().withMessage('Must provide a name'),
+  body('email').notEmpty().isEmail().withMessage('Must provide a valid email'),
   body('password')
     .notEmpty()
-    .withMessage('Password can not be empty')
     .isStrongPassword({ minSymbols: 0 })
     .withMessage(
-      'Must be at least 8 characters with 1 uppercase, 1 lowercase and 1 number'
+      'Must provide a password with a minimum length of 8 characters, 1 uppercase character and 1 lowercase character'
     ),
+  body('role')
+    .default('client')
+    .isIn(['client', 'employee'])
+    .notEmpty()
+    .withMessage('Must provide a valid role'),
 ];
 
 const createRepairValidations = [

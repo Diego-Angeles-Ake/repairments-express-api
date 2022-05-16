@@ -12,11 +12,18 @@ const {
 // Middleware
 const { repairExists } = require('../middlewares/repairs.middlwares');
 const {
-  createUserValidations,
+  protectToken,
+  employeeAuth,
+} = require('../middlewares/users.middlewares');
+const {
   checkValidations,
   createRepairValidations,
 } = require('../middlewares/validations.middlewares');
 
+// Protected routes
+router.use(protectToken);
+// Employee specific
+router.use(employeeAuth);
 router
   .route('/')
   .get(getAllRepairs)
